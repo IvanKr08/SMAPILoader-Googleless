@@ -1,4 +1,22 @@
-﻿!!! need \8.0.X\runtimes\android-arm64\native\libmonosgen-2.0.so
+﻿Использование инструкции ниже на версии 8.0.22 приводит к моментальному
+вылету всего загрузчика. Мне удалось заставить его работать, использовав
+вместо двух первых патчей обычную заглушку из:
+mov w0, #1
+ret
+
+Что, в теории, должно разрешить доступ к классу в любом случае.
+Небезопасно, но надежно.
+
+Третий патч теоретически работоспособен и может быть применен сразу,
+но требуются детальные тесты. Я не понимаю, что он делает.
+
+В уже пропатченном libmonosgen-2.0 8.0.22 all patched.sopatched я заглушил 
+mono_method_can_access_method_full и mono_method_can_access_field,
+но применил третий для mono_class_from_mono_type_internal.
+
+---
+
+!!! need \8.0.X\runtimes\android-arm64\native\libmonosgen-2.0.so
 
 Patch Bytes in ghidra or any tool
 

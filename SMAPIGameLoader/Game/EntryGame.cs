@@ -2,6 +2,7 @@
 using Android.Content;
 using SMAPIGameLoader.Launcher;
 using System;
+using Xamarin.Essentials;
 
 namespace SMAPIGameLoader;
 internal static class EntryGame
@@ -45,6 +46,7 @@ internal static class EntryGame
         catch (Exception ex)
         {
             ToastNotifyTool.Notify("Error:LaunchGameActivity: " + ex.ToString());
+			Clipboard.SetTextAsync(ex.ToString());
         }
     }
     //prevent Load Game Assembly in scope function LaunchGameActivityInternal()

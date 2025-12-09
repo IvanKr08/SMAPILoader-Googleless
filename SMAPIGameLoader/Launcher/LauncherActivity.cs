@@ -157,7 +157,11 @@ public class LauncherActivity : AppCompatActivity
             launcherInfoLines.AppendLine("Your Game Version: " + StardewApkTool.CurrentGameVersion);
             launcherInfoLines.AppendLine("Discord: Stardew SMAPI Thailand");
             launcherInfoLines.AppendLine("Owner: NRTnarathip");
-
+			launcherInfoLines.AppendLine("Googleless Patch: IvanKr08");
+			launcherInfoLines.AppendLine($"Game Package: {StardewApkTool.CurrentPackageInfo}");
+			launcherInfoLines.AppendLine($"Split Content: {StardewApkTool.IsSplitContent}");
+			launcherInfoLines.AppendLine($"Content Apk Path: {StardewApkTool.ContentApkPath}");
+			
             FindViewById<TextView>(ResourceConstant.Id.launcherInfoTextView).Text = launcherInfoLines.ToString();
 
         }

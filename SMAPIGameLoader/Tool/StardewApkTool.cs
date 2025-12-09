@@ -13,7 +13,8 @@ internal static class StardewApkTool
 {
     public const string GamePlayStorePackageName = "com.chucklefish.stardewvalley";
     public const string GameGalaxyStorePackageName = "com.chucklefish.stardewvalleysamsung";
-    static bool IsGameFromPlayStore = false;
+    public static bool IsSplitContent { get; private set; }
+	static bool IsGameFromPlayStore = false;
     static bool IsGameFromGalaxyStore = false;
     static PackageInfo _currentPackageInfo;
 
@@ -36,6 +37,10 @@ internal static class StardewApkTool
             _currentPackageInfo = playStore;
             IsGameFromPlayStore = true;
             Console.WriteLine("Game Install From Play Store");
+
+			//из-за священной войны с пиратами страдают обычные люди!!!
+            var splitApks = CurrentPackageInfo.ApplicationInfo?.SplitSourceDirs;
+            IsSplitContent = splitApks?.Count == 2;
         }
     }
 
@@ -45,38 +50,20 @@ internal static class StardewApkTool
     {
         get
         {
-            if (CurrentPackageInfo == null)
-                return false;
-
-            //play store
-            if (IsGameFromPlayStore)
-            {
-                var version = CurrentPackageInfo.VersionName;
-                var splitApks = CurrentPackageInfo.ApplicationInfo?.SplitSourceDirs;
-                return splitApks?.Count == 2;
-            }
-
-            //samsung
-            return true;
+            return CurrentPackageInfo != null;
         }
     }
 
     public static Android.Content.Context GetContext => Application.Context;
-    public static string? BaseApkPath => CurrentPackageInfo?.ApplicationInfo?.PublicSourceDir;
+    public static string? BaseApkPath => CurrentPackageInfo.ApplicationInfo.PublicSourceDir;
     public static string? ContentApkPath
     {
         get
         {
             try
             {
-                if (CurrentPackageInfo == null)
-                    return null;
+                if (IsSplitContent) return CurrentPackageInfo.ApplicationInfo.SplitSourceDirs?.First(path => path.Contains("split_content"));
 
-                //play store
-                if (IsGameFromPlayStore)
-                    return CurrentPackageInfo.ApplicationInfo.SplitSourceDirs?.First(path => path.Contains("split_content"));
-
-                //samsung
                 return BaseApkPath;
             }
             catch (Exception ex)
