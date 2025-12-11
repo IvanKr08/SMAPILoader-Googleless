@@ -1,0 +1,28 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  publish:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.22
+    - name: Restore workload
+      run: dotnet workload restore
+    - name: Patch Mono Runtime
+      run: xcopy "./SMAPIGameLoader/LibsPatch/libmonosgen-2.0 8.0.22 all patched.sopatched" "C:/Program Files/dotnet/packs/Microsoft.NETCore.App.Runtime.Mono.android-arm64/8.0.22/runtimes/android-arm64/native/libmonosgen-2.0.so" /Y
+    - name: Publish
+      run: dotnet publish
