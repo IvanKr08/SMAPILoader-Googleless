@@ -1,11 +1,12 @@
 ﻿using SMAPIGameLoader.Tool;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using Xamarin.Essentials;
 
 namespace SMAPIGameLoader.Launcher;
@@ -31,8 +32,7 @@ internal static class SaveManager
     static async void ImportSaveZipInternal()
     {
         var pick = await FilePickerTool.PickZipFile();
-        if (pick is null)
-            return;
+        if (pick == null) return;
 
         if (pick.FileName is not "Saves.zip")
         {

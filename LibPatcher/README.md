@@ -10,9 +10,9 @@ ret
 Третий патч теоретически работоспособен и может быть применен сразу,
 но требуются детальные тесты. Я не понимаю, что он делает.
 
-В уже пропатченном libmonosgen-2.0 8.0.22 all patched.sopatched я заглушил 
+В уже пропатченном libmonosgen-2.0.so я просто заглушил
 mono_method_can_access_method_full и mono_method_can_access_field,
-но применил третий для mono_class_from_mono_type_internal.
+но применил третий патч для mono_class_from_mono_type_internal.
 
 ---
 

@@ -2,15 +2,20 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using Android.Text;
 using Android.Util;
 using Android.Views;
+
 using HarmonyLib;
+
 using Java.Util;
+
 using Microsoft.Xna.Framework;
+
 using SMAPIGameLoader.Game;
 using SMAPIGameLoader.Tool;
+
 using StardewValley;
+
 using System;
 using System.Collections.Generic;
 using System.IO;

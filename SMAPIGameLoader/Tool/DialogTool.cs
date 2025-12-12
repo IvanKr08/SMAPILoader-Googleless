@@ -1,10 +1,6 @@
 ﻿using Android.App;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
 
 namespace SMAPIGameLoader.Tool;
 
@@ -30,7 +26,7 @@ internal class DialogTool
                     onClickCancel();
                 });
             }
-
+            
             builder.SetMessage(msg);
             builder.SetTitle(title);
 

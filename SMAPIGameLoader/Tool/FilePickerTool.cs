@@ -1,13 +1,13 @@
 ﻿using Android;
 using Android.Content.PM;
 using Android.OS;
+
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+
 using Xamarin.Essentials;
 
 namespace SMAPIGameLoader;
@@ -22,10 +22,10 @@ internal static class FilePickerTool
     {
         if (title == null)
             title = "Please select zip file";
-
+        
         //TODO check permission
         //android 6 --> 10 need to request External read write storage
-        var activity = SMAPIGameLoader.Launcher.LauncherActivity.Instance;
+        var activity = Launcher.LauncherActivity.Instance;
         if (Build.VERSION.SdkInt >= BuildVersionCodes.M && Build.VERSION.SdkInt <= BuildVersionCodes.Q)
         {
             if (ContextCompat.CheckSelfPermission(activity, Manifest.Permission.ReadExternalStorage) != Permission.Granted

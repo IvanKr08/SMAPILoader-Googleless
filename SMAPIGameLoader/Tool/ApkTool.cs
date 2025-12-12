@@ -1,11 +1,9 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Xamarin.Essentials;
 
 namespace SMAPIGameLoader;
@@ -26,11 +24,10 @@ internal static class ApkTool
             else
                 return ctx.PackageManager.GetPackageInfo(PackageName, 0);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return null;
         }
     }
-    public static bool IsInstalled(string packageName)
-        => GetPackageInfo(packageName) is not null;
+    public static bool IsInstalled(string packageName) => GetPackageInfo(packageName) != null;
 }

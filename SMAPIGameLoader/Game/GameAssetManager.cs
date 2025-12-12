@@ -1,7 +1,5 @@
 ﻿
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using StardewValley;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -49,7 +47,7 @@ static class GameAssetManager
             //Console.WriteLine("on OpenStream: " + assetName);
             return File.OpenRead(assetFullPath);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //Console.WriteLine(ex);
             throw;

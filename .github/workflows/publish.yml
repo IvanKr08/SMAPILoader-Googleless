@@ -23,6 +23,9 @@ jobs:
     - name: Restore workload
       run: dotnet workload restore
     - name: Patch Mono Runtime
-      run: xcopy "./SMAPIGameLoader/LibsPatch/libmonosgen-2.0 8.0.22 all patched.sopatched" "C:/Program Files/dotnet/packs/Microsoft.NETCore.App.Runtime.Mono.android-arm64/8.0.22/runtimes/android-arm64/native/libmonosgen-2.0.so" /Y
+      run: |
+        tree "C:\Program Files\dotnet\packs"
+        tree .
+      # run: xcopy "./SMAPIGameLoader/LibsPatch/libmonosgen-2.0 8.0.22 all patched.sopatched" "C:/Program Files/dotnet/packs/Microsoft.NETCore.App.Runtime.Mono.android-arm64/8.0.22/runtimes/android-arm64/native/libmonosgen-2.0.so" /Y
     - name: Publish
       run: dotnet publish

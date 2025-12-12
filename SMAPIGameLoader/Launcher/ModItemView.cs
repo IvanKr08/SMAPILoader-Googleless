@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
+
 using System;
 using System.IO;
-using System.Text.Json.Nodes;
 
 namespace SMAPIGameLoader.Launcher;
 
@@ -22,24 +22,24 @@ public class ModItemView
             var manifestText = File.ReadAllText(manifestFilePath);
             var manifest = JObject.Parse(manifestText);
 
-            this.modName = manifest["Name"].ToString();
-            this.modVersion = manifest["Version"].ToString();
+            modName = manifest["Name"].ToString();
+            modVersion = manifest["Version"].ToString();
 
-            this.NameText = $"[{modListIndex + 1}]: {modName}";
-            this.VersionText = $"Version: {modVersion}";
+            NameText = $"[{modListIndex + 1}]: {modName}";
+            VersionText = $"Version: {modVersion}";
 
-            this.modFolderPath = Path.GetDirectoryName(manifestFilePath);
+            modFolderPath = Path.GetDirectoryName(manifestFilePath);
             var relativeModDir = modFolderPath.Substring(modFolderPath.IndexOf("/Mods") + 5);
             FolderPathText = $"Folder: {relativeModDir}";
         }
         catch (Exception ex)
         {
-            this.modFolderPath = Path.GetDirectoryName(manifestFilePath);
+            modFolderPath = Path.GetDirectoryName(manifestFilePath);
             FolderPathText = modFolderPath;
-            ErrorDialogTool.Show(ex, "Error try parser mod folder path: " + this.modFolderPath);
+            ErrorDialogTool.Show(ex, "Error try parser mod folder path: " + modFolderPath);
         }
 
-        this.NameText = $"[{modListIndex + 1}]: {modName}";
-        this.VersionText = $"Version: {modVersion}";
+        NameText = $"[{modListIndex + 1}]: {modName}";
+        VersionText = $"Version: {modVersion}";
     }
 }

@@ -1,12 +1,9 @@
 ﻿using Android.App;
-using MonoGame.Framework.Utilities;
-using SMAPIGameLoader.Game;
-using SMAPIGameLoader.Launcher;
+
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
 using System.Reflection;
+
 using Xamarin.Android.AssemblyStore;
 
 namespace SMAPIGameLoader;

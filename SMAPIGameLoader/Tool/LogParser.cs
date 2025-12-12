@@ -1,11 +1,12 @@
 ﻿using SMAPIGameLoader.Launcher;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+
 using Xamarin.Essentials;
 
 namespace SMAPIGameLoader.Tool;
@@ -41,7 +42,7 @@ internal static class LogParser
         TaskTool.NewLine("starting task upload log");
 
         string logFilePath = Path.Combine(FileTool.ExternalFilesDir, "ErrorLogs", SMAPILogFileName);
-        if (File.Exists(logFilePath) is false)
+        if (!File.Exists(logFilePath))
         {
             ErrorDialogTool.Show(new Exception($"Not found file {logFilePath}"), "SMAPI Log Error");
             return;

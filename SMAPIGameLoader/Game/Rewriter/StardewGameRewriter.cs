@@ -2,7 +2,6 @@
 using System.Linq;
 using Mono.Cecil;
 using System.IO;
-using Android.App;
 
 namespace SMAPIGameLoader.Game.Rewriter;
 

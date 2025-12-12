@@ -1,15 +1,12 @@
-﻿using Android.App;
-using Java.Lang.Ref;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
+
 using SMAPIGameLoader.Tool;
+
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
 
 namespace SMAPIGameLoader.Launcher;
 
@@ -40,7 +37,7 @@ internal static class ModInstaller
     }
     public static bool AssertModISupport(JObject manifest)
     {
-        if (SMAPIInstaller.IsInstalled is false)
+        if (!SMAPIInstaller.IsInstalled)
         {
             ToastNotifyTool.Notify("Can't check mod, please install SMAPI first!!");
             return false;
@@ -174,8 +171,7 @@ internal static class ModInstaller
     {
         try
         {
-            if (Directory.Exists(folderPath) is false)
-                return false;
+            if (!Directory.Exists(folderPath)) return false;
 
             Directory.Delete(folderPath, true);
 

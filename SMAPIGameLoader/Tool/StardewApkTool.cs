@@ -1,11 +1,8 @@
 ﻿using Android.App;
 using Android.Content.PM;
-using Android.OS;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SMAPIGameLoader;
 
@@ -14,8 +11,6 @@ internal static class StardewApkTool
     public const string GamePlayStorePackageName = "com.chucklefish.stardewvalley";
     public const string GameGalaxyStorePackageName = "com.chucklefish.stardewvalleysamsung";
     public static bool IsSplitContent { get; private set; }
-	static bool IsGameFromPlayStore = false;
-    static bool IsGameFromGalaxyStore = false;
     static PackageInfo _currentPackageInfo;
 
     //init at first SDK
@@ -29,13 +24,11 @@ internal static class StardewApkTool
         if (samsung != null)
         {
             _currentPackageInfo = samsung;
-            IsGameFromGalaxyStore = true;
             Console.WriteLine("Game Install From Galaxy Store");
         }
         else if (playStore != null)
         {
             _currentPackageInfo = playStore;
-            IsGameFromPlayStore = true;
             Console.WriteLine("Game Install From Play Store");
 
 			//из-за священной войны с пиратами страдают обычные люди!!!

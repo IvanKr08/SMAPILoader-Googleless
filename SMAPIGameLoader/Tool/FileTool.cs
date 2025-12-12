@@ -1,15 +1,11 @@
 ﻿using Android.App;
 using Android.Content;
-using Android.Content.PM;
 using Android.Provider;
+
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SMAPIGameLoader;
 
@@ -86,7 +82,7 @@ internal static class FileTool
         try
         {
             //check path not exist, use external files dir 
-            if (Directory.Exists(initDirPath) is false)
+            if (!Directory.Exists(initDirPath))
             {
                 //default at ../files path
                 initDirPath = ExternalFilesDir;

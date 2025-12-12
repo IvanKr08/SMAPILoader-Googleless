@@ -22,13 +22,13 @@ internal static class EntryGame
 
         try
         {
-            if (StardewApkTool.IsGameVersionSupport == false)
+            if (!StardewApkTool.IsGameVersionSupport)
             {
                 ToastNotifyTool.Notify("Not support game version: " + StardewApkTool.CurrentGameVersion + ", please update game");
                 return;
             }
 
-            if (SMAPIInstaller.IsInstalled is false)
+            if (!SMAPIInstaller.IsInstalled)
             {
                 ToastNotifyTool.Notify("Please install SMAPI!!");
                 return;

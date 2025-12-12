@@ -1,8 +1,8 @@
 ﻿using Android.App;
-using Android.Views;
-using Android.Widget;
+
 using System;
 using System.Threading.Tasks;
+
 using Xamarin.Essentials;
 
 namespace SMAPIGameLoader;
@@ -82,7 +82,7 @@ internal static class TaskTool
             return;
         }
 
-        if (busyDialog is not null)
+        if (busyDialog != null)
         {
             busyMessage = msg;
             busyDialog.SetMessage(msg);
@@ -98,7 +98,6 @@ internal static class TaskTool
     }
     public static void SetTitle(string title)
     {
-
         if (MainThread.IsMainThread == false)
         {
             RunMainThread(() =>
@@ -108,8 +107,8 @@ internal static class TaskTool
             return;
         }
 
-        if (busyDialog is null)
-            return;
+        if (busyDialog == null) return;
+
         busyDialog.SetTitle(title);
     }
     static void ShowBusyDialog()
