@@ -23,7 +23,7 @@ jobs:
     - name: Restore workload
       run: dotnet workload restore
     - name: Patch Mono Runtime
-      run: copy "LibPatcher\libmonosgen-2.0.so" "C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Runtime.Mono.android-arm64\8.0.22\runtimes\android-arm64\native\" /Y
+      run: copy LibPatcher\libmonosgen-2.0.so 'C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Runtime.Mono.android-arm64\8.0.22\runtimes\android-arm64\native\'
     - name: Publish
       run: dotnet publish ./SMAPIGameLoader
     - name: Upload an APK
