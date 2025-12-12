@@ -1,65 +1,16 @@
-﻿Использование инструкции ниже на версии 8.0.22 приводит к моментальному
-вылету всего загрузчика. Мне удалось заставить его работать, использовав
-вместо двух первых патчей обычную заглушку из:
-mov w0, #1
-ret
+﻿# LibPatcher
+Утилита для "кастрации" рантайма Mono. Сейчас содержит 2 патча:
+1. MethodAccessException в mono_method_can_access_method_full. Точно не знаю, по какой именно причине выбрасывается исключение (доменов нет, возможно попытка обращения к закрытому методу, который на момент сборки был открытым). Патч отключает все проверки доступа. Без него вы даже не сможете запустить игру.
+2. FieldAccessException в mono_method_can_access_field_full. Аналогично первому. Вряд ли требуются дополнительные пояснения.
 
-Что, в теории, должно разрешить доступ к классу в любом случае.
-Небезопасно, но надежно.
+Патчи для ARM64 проверены и я уверен в их работоспособности. Для ARM32, x64 и x86 нужен человек с соответствующими устройствами, который сможет проверить их на работоспособность.
 
-Третий патч теоретически работоспособен и может быть применен сразу,
-но требуются детальные тесты. Я не понимаю, что он делает.
+# Использование
+patch [необязательный путь до папки с dotnet] - применить.
 
-В уже пропатченном libmonosgen-2.0.so я просто заглушил
-mono_method_can_access_method_full и mono_method_can_access_field,
-но применил третий патч для mono_class_from_mono_type_internal.
+revert [необязательный путь до папки с dotnet] - откатить из бекапа.
 
----
+silent <patch/revert> - автоматический режим.
 
-!!! need \8.0.X\runtimes\android-arm64\native\libmonosgen-2.0.so
-
-Patch Bytes in ghidra or any tool
-
-1. fix Method Access Exception
-in BypassAccessExceptionLib.cpp
-
-mono_method_can_access_method_full = mono_method_can_access_method + 0x24
-
-address = mono_method_can_access_method_full + 0x1c
-bytes = "1f 20 03 d5 of" x 5 
-!!or fill NOP x 5 time
-
-
-
-2. fix Field Access Exception
-in BypassAccessExceptionLib.cpp
-
-address = mono_method_can_access_field + 0x120
-bytes = 0x20, 0x00, 0x80, 0x52 
-is equal 'mov, 1'
-
-
-
-3. fix MonoMethodInfo GetParameters() crash on some DMD Method
-in mono_class_from_mono_type_internal_CrashFix.cs
-
-address = mono_class_from_mono_type_internal + 0x23c
-
-opcodes:
-	00302798 1f 01 00 f1     cmp        x8,#0x0
-	0030279c 20 01 88 9a     csel       x0,x9,x8,eq
-	003027a0 fd 7b c1 a8     ldp        x29=>local_10,x30,[sp], #0x10
-	003027a4 c0 03 5f d6     ret
-
-decode:
-    if (lVar2 != 0) {
-      lVar1 = lVar2;
-    }
-
-
-
-after patch you need to replace file as
-!! if you are use .net 8.0.x 
-C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Runtime.Mono.android-arm64\8.0.x\runtimes\android-arm64\native\libmonosgen-2.0.so
-
-Don't forget "Rebuild" Project after patch lib.so
+> [!IMPORTANT]
+> Рантайм кешируется при сборке. Если вы пропатчили/откатили патч, то не забудьте произвести восстановление (dotnet restore), а лучше удалить obj и bin в проекте.

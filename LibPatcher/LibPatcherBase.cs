@@ -1,230 +1,101 @@
-﻿using ELFSharp.ELF.Sections;
+﻿using System.Numerics;
+
 using ELFSharp.ELF;
-using System.Security.Cryptography;
-using System.Text;
+using ELFSharp.ELF.Sections;
 
 namespace LibPatcher;
 
-internal class PatchData
-{
-    public string ExportFunctionName { get; }
-    public int Offset { get; }
-    public byte[] PatchBytes { get; }
+abstract class LibPatcherBase<T> where T : struct, IUnsignedNumber<T> {
+    public Dictionary<string, SymbolEntry<T>> MonoMethodMap { get; } = new();
+    public string LibFile { get; }
 
-    public PatchData(string exportFuncName, int offset, byte[] patchBytes)
-    {
-        this.ExportFunctionName = exportFuncName;
-        this.Offset = offset;
-        this.PatchBytes = patchBytes;
-    }
-}
-
-internal abstract class LibPatcherBase
-{
-    public const string LibSrcFileName = "libmonosgen-2.0.so";
-    public readonly string LibSrcPath;
-
-    public const string LibOriginalBackupFileName = "libmonosgen-2.0-original.so";
-    public readonly string LibOrigialBackupFilePath;
-
-    public readonly string LibModifyOutputFileName = "libmonosgen-2.0-modify.so";
-    public string LibModifyOutputFilePath { get => LibModifyOutputFileName; }
-
-    public ISymbolTable dynamicSymbolTable;
-    public IELF LibReader;
-    public Dictionary<string, SymbolEntry<UInt64>> monoMethodMap = new();
-    public FileStream LibWriter = null;
-
-    internal LibPatcherBase()
-    {
-        Console.Write("Package path: ");
-        string? PackageDirPath = Console.ReadLine();
-        if (PackageDirPath == null)
-            throw new Exception("please enter your package " +
-                "'microsoft.netcore.app.runtime.mono.android-arm64' dir path!!");
-
-        LibModifyOutputFileName = LibModifyOutputFileName.Replace(".so", "-arm64.so");
-        LibSrcPath = Path.Combine(PackageDirPath, @"runtimes\android-arm64\native", LibSrcFileName);
-        LibOrigialBackupFilePath = LibSrcPath.Replace(LibSrcFileName, LibOriginalBackupFileName);
-
-        //Start
-        Run();
-
-        //End & post build
-        PostBuild();
-
-        Console.WriteLine("Successfully Patch Lib on: " + this.GetType());
+    internal LibPatcherBase(string dotnetHome) {
+        var ver = "8.0.22";
+        LibFile = Path.Combine(dotnetHome, @$"packs\Microsoft.NETCore.App.Runtime.Mono.android-{ArchName}\{ver}\runtimes\android-{ArchName}\native\libmonosgen-2.0.so");
     }
 
-    void Run()
-    {
-
-        Console.WriteLine("Start Run Patch Lib On: " + this.GetType());
-
-        //clone original first
-        if (File.Exists(LibOrigialBackupFilePath) is false)
-            File.Copy(LibSrcPath, LibOrigialBackupFilePath);
-
-        //check verify original file hash
-        var fileHash = ComputeSHA256(LibOrigialBackupFilePath);
-        var hashTarget = GetLibHashTarget();
-        if (fileHash != hashTarget)
-        {
-            Console.WriteLine("file hash not match to: " + hashTarget);
-            Console.WriteLine("current your file: " + fileHash);
-            Console.WriteLine("at file: " + LibOrigialBackupFilePath);
-            Exit();
+    public void Patch() {
+        var bakFile = LibFile + ".bak";
+        if (File.Exists(bakFile)) {
+            Console.WriteLine("Backup file exists, skipping...");
+            return;
         }
+        File.Copy(LibFile, bakFile);
 
-        //clone into local app
-        //1 lib-modify.so
-        File.Copy(LibOrigialBackupFilePath, LibModifyOutputFileName, true);
+        try {
+            using var libReader = ELFReader.Load(LibFile);
 
-        Console.WriteLine("original hash: " + ComputeSHA256(LibOrigialBackupFilePath));
-
-        //setup elf reader
-        LibReader = ELFReader.Load(LibOrigialBackupFilePath);
-        dynamicSymbolTable = LibReader.GetSection(".dynsym") as ISymbolTable;
-        foreach (SymbolEntry<UInt64> item in dynamicSymbolTable.Entries)
-        {
-            if (item.Type == SymbolType.Function && item.Name.StartsWith("mono_"))
-            {
-                monoMethodMap[item.Name] = item;
+            var sect = (SymbolTable<T>)libReader.GetSection(".dynsym");
+            foreach (var item in sect.Entries) {
+                if (item.Type == SymbolType.Function && item.Name.StartsWith("mono_")) {
+                    MonoMethodMap[item.Name] = item;
+                }
             }
+
+            libReader.Dispose();
+
+            PatchData[] patches = [
+                Patch_FieldAccessException(),
+                Patch_MethodAccessException(),
+                //Patch_mono_class_from_mono_type_internalCrashFix(),
+            ];
+
+            using var libWriter = File.Open(LibFile, FileMode.Open, FileAccess.ReadWrite);
+            foreach (var patchData in patches) {
+                var funcVAFile = GetFunctionOffsetVAFile(patchData.ExportFunctionName);
+                var patchFileOffset = long.CreateChecked(funcVAFile) + patchData.Offset;
+
+                Console.WriteLine($$"""
+                Patch: {{patchData.ExportFunctionName}}
+                    File offset      : 0x{{patchData.Offset:X}}
+                    Byte length      : {{patchData.PatchBytes.Length}}
+                    Patch file offset: 0x{{patchFileOffset:X}}
+                """);
+
+                WriteByteArray(libWriter, patchFileOffset, patchData.PatchBytes);
+            }
+
+            Console.WriteLine($"Successfully patched {ArchName} runtime");
         }
-
-        //setup writer
-        LibWriter = File.Open(LibModifyOutputFileName, FileMode.Open, FileAccess.ReadWrite);
-
-
-        //ready patch all
-        PatchData[] patches = [
-            Patch_FieldAccessException(),
-            Patch_MethodAccessException(),
-            //Patch_mono_class_from_mono_type_internalCrashFix(),
-        ];
-        foreach (var patchData in patches)
-        {
-            var funcVAFile = (long)GetFunctionOffsetVAFile(patchData.ExportFunctionName);
-            var patchFileOffset = funcVAFile + patchData.Offset;
-
-            Console.WriteLine($"Try patch: {patchData.ExportFunctionName}" +
-                $" file offset: 0x{patchData.Offset:X}" +
-                $" byte length: {patchData.PatchBytes.Length}" +
-                $" patch file offset: 0x{patchFileOffset:X}");
-            WriteByteArray(patchFileOffset, patchData.PatchBytes);
+        catch (Exception e) {
+            Console.WriteLine(e);
+            Revert();
         }
+    }
+    public void Revert() {
+        var bakFile = LibFile + ".bak";
 
-
-        //cleanup
-        LibWriter.Close();
-        LibReader.Dispose();
-
-        Console.WriteLine($"New modify {LibModifyOutputFileName} hash: {ComputeSHA256(LibModifyOutputFileName)}");
+        if (File.Exists(bakFile)) {
+            File.Copy(bakFile, LibFile, true);
+            File.Delete(bakFile);
+            Console.WriteLine($"Reverted {bakFile}");
+        }
+        else {
+            Console.WriteLine($"No backup file exists: {bakFile}");
+        }
     }
 
-    void PostBuild()
-    {
-        //copy push lib modify into package dir lib
-        //error can't access file path
-        //need admin permission
-        Console.WriteLine("Starting Post Build...");
-        Console.WriteLine($"Try copy {LibModifyOutputFilePath} to {LibSrcPath}");
-        File.Copy(LibModifyOutputFilePath, LibSrcPath, true);
-        Console.WriteLine("Done Post Build");
-    }
-    protected abstract PatchData Patch_FieldAccessException();
-    protected abstract PatchData Patch_MethodAccessException();
-    protected abstract PatchData Patch_mono_class_from_mono_type_internalCrashFix();
-    protected abstract string GetLibHashTarget();
-
-    internal void Exit()
-    {
-        Console.WriteLine("Press Any Key To Exit..");
-        Console.Read();
-        Environment.Exit(0);
-    }
-    internal ulong GetFunctionOffsetVASection(string name) => GetFunctionOffsetVASection(GetFunction(name));
-    internal ulong GetFunctionOffsetVASection(SymbolEntry<UInt64> func)
-    {
+    T GetFunctionOffsetVASection(SymbolEntry<T> func) {
         return func.Value - func.PointedSection.Offset;
     }
-    internal ulong GetFunctionOffsetVAFile(string name)
-    {
-        var func = GetFunction(name);
-        var section = func.PointedSection;
+    SymbolEntry<T> GetFunction(string name) {
+        return MonoMethodMap[name];
+    }
+    T GetFunctionOffsetVAFile(string name) {
+        var func            = GetFunction(name);
         var offsetOnSection = GetFunctionOffsetVASection(func);
-
-        var headerSize = section.Size;
-        var headerOffset = section.Offset;
+        var section         = func.PointedSection;
+        var headerOffset    = section.Offset;
 
         return headerOffset + offsetOnSection;
     }
-    internal byte[] ReadByteArrayFromFunction(SymbolEntry<UInt64> func, int readOffset, int readCount)
-    {
-        var section = func.PointedSection;
-        var funcOffset = GetFunctionOffsetVASection(func);
-        byte[] sectionData = section.GetContents();
+    void WriteByteArray(FileStream file, long start, byte[] bytes) {
+        file.Seek(start, SeekOrigin.Begin);
+        file.Write(bytes);
+    }
 
-        byte[] result = new byte[readCount];
-        Array.Copy(sectionData, (int)funcOffset + readOffset, result, 0, readCount);
-        return result;
-    }
-    internal SymbolEntry<UInt64> GetFunction(string name) => monoMethodMap[name];
-    internal void WriteByteArray(long start, byte[] bytes)
-    {
-        LibWriter.Seek(start, SeekOrigin.Begin);
-        LibWriter.Write(bytes);
-    }
-    internal void ReadByteArray(byte[] bytes, long start)
-    {
-        LibWriter.Seek(start, SeekOrigin.Begin);
-        LibWriter.Read(bytes);
-    }
-    internal void DumpHex(byte[] bytes, int start, int length)
-    {
-        byte[] crop = new byte[length];
-        Array.Copy(bytes, start, crop, 0, length);
-        DumpHex(crop);
-    }
-    internal void DumpHex(int start, int length)
-    {
-        byte[] bytes = new byte[length];
-        ReadByteArray(bytes, start);
-        DumpHex(bytes);
-    }
-    internal void DumpHex(byte[] bytes, int dumpRowLength = 4)
-    {
-        Console.WriteLine("===== Dump Memory =====");
-        int x = 0;
-        StringBuilder sb = new();
-        for (int i = 0; i < bytes.Length; i++)
-        {
-            byte value = bytes[i];
-
-            //new line
-            if (x == dumpRowLength)
-            {
-                sb.Append("\n");
-                x = 0;
-            }
-
-            sb.Append($"{value:X2} ");
-            x++;
-        }
-        Console.WriteLine(sb.ToString());
-        Console.WriteLine("===== End Dump Memory =====");
-    }
-    internal string ComputeSHA256(string filePath)
-    {
-        using var sha256 = SHA256.Create();
-        using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-
-        // Compute hash
-        byte[] hashBytes = sha256.ComputeHash(fileStream);
-
-        // Convert hash to hex string
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-    }
+    protected abstract string ArchName { get; }
+    protected abstract PatchData Patch_FieldAccessException();
+    protected abstract PatchData Patch_MethodAccessException();
 }
 
