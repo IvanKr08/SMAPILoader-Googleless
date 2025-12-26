@@ -3,7 +3,7 @@
 		<TargetFramework>net8.0-android</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<ApplicationId>com.companyname.SMAPIGameLoader</ApplicationId>
-		<SupportedOSPlatformVersion>23.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 		<AndroidSigningKeyStore>debug.keystore</AndroidSigningKeyStore>
 		<PackageIcon>icon.png</PackageIcon>
 		<Version></Version>
@@ -87,7 +87,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<None Update="Resources\Drawable\icon.png">
+		<None Update="resources\Drawable\icon.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>

@@ -313,7 +313,12 @@ public class SMAPIActivity : AndroidGameActivity
             {
                 Log.It("PromptForPermissions permissionsArray[" + i + "]: " + array[i]);
             }
-            RequestPermissions(array, 0);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.M) {
+                RequestPermissions(array, 0);
+            }
+            else {
+                ToastNotifyTool.Notify($"Allow {string.Join(' ', array)}!");
+            }
         }
     }
 
