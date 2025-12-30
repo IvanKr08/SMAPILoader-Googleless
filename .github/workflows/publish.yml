@@ -1,19 +1,15 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+name: Build APK
 
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
   publish:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -26,7 +22,7 @@ jobs:
       run: dotnet run --project LibPatcher silent patch
     - name: Publish
       run: dotnet publish ./SMAPIGameLoader
-    - name: Upload an APK
+    - name: Upload the APK
       uses: actions/upload-artifact@v5.0.0
       with:
         name: Built APK
