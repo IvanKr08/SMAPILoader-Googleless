@@ -22,7 +22,7 @@ internal static class LogParser
     const string SMAPILogUrl = "https://smapi.io/log";
     const string SMAPILogFileName = "SMAPI-latest.txt";
 
-    public static async void OnClickUploadLog(object sender, EventArgs eventArgs)
+    public static void OnClickUploadLog(object sender, EventArgs eventArgs)
     {
         TaskTool.Run(ActivityTool.CurrentActivity, async () =>
         {

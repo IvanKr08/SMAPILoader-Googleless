@@ -98,7 +98,9 @@ public class SMAPIActivity : AndroidGameActivity
         RequestWindowFeature(WindowFeatures.NoTitle);
         if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
         {
+#pragma warning disable CA1416
             Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+#pragma warning restore CA1416
         }
         Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
         Window.SetFlags(WindowManagerFlags.KeepScreenOn, WindowManagerFlags.KeepScreenOn);
@@ -154,7 +156,15 @@ public class SMAPIActivity : AndroidGameActivity
     {
         if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
         {
-            Window.DecorView.SystemUiVisibility = (StatusBarVisibility)5894;
+#pragma warning disable CS0618
+            Window.DecorView.SystemUiVisibility = (StatusBarVisibility)(
+                SystemUiFlags.HideNavigation  | 
+                SystemUiFlags.Fullscreen      | 
+                SystemUiFlags.LayoutStable    | 
+                SystemUiFlags.LayoutFlags     |
+                SystemUiFlags.ImmersiveSticky 
+            );
+#pragma warning restore CS0618
         }
     }
     public bool CheckStorageMigration()
@@ -168,7 +178,9 @@ public class SMAPIActivity : AndroidGameActivity
         Log.It("MainActivity.LogPermissions method PackageManager: , AccessNetworkState:" + PackageManager.CheckPermission("android.permission.ACCESS_NETWORK_STATE", PackageName).ToString() + ", AccessWifiState:" + PackageManager.CheckPermission("android.permission.ACCESS_WIFI_STATE", PackageName).ToString() + ", Internet:" + PackageManager.CheckPermission("android.permission.INTERNET", PackageName).ToString() + ", Vibrate:" + PackageManager.CheckPermission("android.permission.VIBRATE", PackageName));
         if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
         {
+#pragma warning disable CA1416
             Log.It("MainActivity.LogPermissions: , AccessNetworkState:" + CheckSelfPermission("android.permission.ACCESS_NETWORK_STATE").ToString() + ", AccessWifiState:" + CheckSelfPermission("android.permission.ACCESS_WIFI_STATE").ToString() + ", Internet:" + CheckSelfPermission("android.permission.INTERNET").ToString() + ", Vibrate:" + CheckSelfPermission("android.permission.VIBRATE"));
+#pragma warning restore CA1416
         }
     }
     public bool HasPermissions
@@ -314,7 +326,9 @@ public class SMAPIActivity : AndroidGameActivity
                 Log.It("PromptForPermissions permissionsArray[" + i + "]: " + array[i]);
             }
             if (Build.VERSION.SdkInt >= BuildVersionCodes.M) {
+#pragma warning disable CA1416
                 RequestPermissions(array, 0);
+#pragma warning restore CA1416
             }
             else {
                 ToastNotifyTool.Notify($"Allow {string.Join(' ', array)}!");
@@ -380,11 +394,14 @@ public class SMAPIActivity : AndroidGameActivity
         Context context = Application.Context;
         PackageManager packageManager = context.PackageManager;
         PackageInfo packageInfo = packageManager.GetPackageInfo(context.PackageName, (PackageInfoFlags)0);
+#pragma warning disable CA1422
         return packageInfo.VersionCode;
+#pragma warning restore
     }
     public void SetPaddingForMenus()
     {
         Log.It("MainActivity.SetPaddingForMenus build:" + GetBuild());
+#pragma warning disable CA1416
         if (Build.VERSION.SdkInt >= BuildVersionCodes.P && Window != null && Window.DecorView != null && Window.DecorView.RootWindowInsets != null && Window.DecorView.RootWindowInsets.DisplayCutout != null)
         {
             DisplayCutout displayCutout = Window.DecorView.RootWindowInsets.DisplayCutout;
@@ -398,10 +415,13 @@ public class SMAPIActivity : AndroidGameActivity
                 return;
             }
         }
+#pragma warning restore
         string manufacturer = Build.Manufacturer;
         string model = Build.Model;
         DisplayMetrics displayMetrics = new DisplayMetrics();
+#pragma warning disable CA1422
         WindowManager.DefaultDisplay.GetRealMetrics(displayMetrics);
+#pragma warning restore
         if (displayMetrics.HeightPixels >= 1920 || displayMetrics.WidthPixels >= 1920)
         {
             Game1.xEdge = 20;

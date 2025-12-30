@@ -29,7 +29,9 @@ static class GameAssetManager
         }
     }
     public delegate Stream OnOpenStreamDelegate(string assetName);
+#pragma warning disable CS0649
     public static OnOpenStreamDelegate OnOpenStream;
+#pragma warning restore CS0649
     static Stream FixOpenStream(string assetName)
     {
         try

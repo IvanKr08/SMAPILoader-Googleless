@@ -45,7 +45,7 @@ internal class ModManagerActivity : AppCompatActivity
             OnClickModItemView(e);
         };
         var installModBtn = FindViewById<Button>(Resource.Id.InstallModBtn);
-        installModBtn.Click += async (sender, e) =>
+        installModBtn.Click += (sender, e) =>
         {
             ModInstaller.OnClickInstallMod(OnInstalledCallback: () =>
             {

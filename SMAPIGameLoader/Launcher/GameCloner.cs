@@ -53,7 +53,7 @@ internal static class GameCloner
             var clonerState = JsonConvert.DeserializeObject<ClonerState>(jsonString);
             return clonerState ?? new ClonerState();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //Recreate Game Cloner State always
             return new ClonerState();

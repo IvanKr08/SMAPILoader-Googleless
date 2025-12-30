@@ -25,7 +25,7 @@ public class LauncherActivity : AppCompatActivity
 
     private static bool IsDeviceSupport => IntPtr.Size == 8;
 
-    protected override void OnCreate(Bundle? savedInstanceState)
+    protected override void OnCreate(Bundle savedInstanceState)
     {
         Instance = this;
         base.OnCreate(savedInstanceState);

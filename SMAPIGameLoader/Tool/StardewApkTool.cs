@@ -48,8 +48,8 @@ internal static class StardewApkTool
     }
 
     public static Android.Content.Context GetContext => Application.Context;
-    public static string? BaseApkPath => CurrentPackageInfo.ApplicationInfo.PublicSourceDir;
-    public static string? ContentApkPath
+    public static string BaseApkPath => CurrentPackageInfo.ApplicationInfo.PublicSourceDir;
+    public static string ContentApkPath
     {
         get
         {
@@ -93,7 +93,7 @@ internal static class StardewApkTool
             {
                 return new Version(CurrentPackageInfo?.VersionName);
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 return new Version(0,0,0,0);
             }

@@ -20,7 +20,9 @@ internal static class ApkTool
         {
             var ctx = Application.Context;
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
+#pragma warning disable CA1416
                 return ctx.PackageManager.GetPackageInfo(PackageName, PackageManager.PackageInfoFlags.Of(PackageInfoFlagsLong.None));
+#pragma warning restore
             else
                 return ctx.PackageManager.GetPackageInfo(PackageName, 0);
         }
