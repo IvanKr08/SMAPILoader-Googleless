@@ -1,19 +1,9 @@
-﻿using Android.App;
-using Android.OS;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Org.Json;
+﻿using Newtonsoft.Json;
+
 using SMAPIGameLoader.Game.Rewriter;
+
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
-using static SMAPIGameLoader.Launcher.GameCloner;
 
 namespace SMAPIGameLoader.Launcher;
 
@@ -36,8 +26,8 @@ internal static class GameCloner
         }
         public void MarkCloenGameDone()
         {
-            this.LastLauncherBuildCode = ApkTool.LauncherBuildCode;
-            this.LastGameVersionString = StardewApkTool.CurrentGameVersion.ToString();
+            LastLauncherBuildCode = ApkTool.LauncherBuildCode;
+            LastGameVersionString = StardewApkTool.CurrentGameVersion.ToString();
         }
         public bool IsNeedToCloneGame()
         {
@@ -63,7 +53,7 @@ internal static class GameCloner
             var clonerState = JsonConvert.DeserializeObject<ClonerState>(jsonString);
             return clonerState ?? new ClonerState();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             //Recreate Game Cloner State always
             return new ClonerState();

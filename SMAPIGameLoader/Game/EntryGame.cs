@@ -2,6 +2,8 @@
 using Android.Content;
 using SMAPIGameLoader.Launcher;
 using System;
+using System.Threading.Tasks;
+
 using Xamarin.Essentials;
 
 namespace SMAPIGameLoader;
@@ -9,9 +11,10 @@ internal static class EntryGame
 {
     public static void LaunchGameActivity(Activity launcherActivity)
     {
-        TaskTool.Run(launcherActivity, async () =>
+        TaskTool.Run(launcherActivity, () =>
         {
             LaunchGameActivityInternal(launcherActivity);
+            return Task.CompletedTask;
         });
     }
 
@@ -22,13 +25,13 @@ internal static class EntryGame
 
         try
         {
-            if (StardewApkTool.IsGameVersionSupport == false)
+            if (!StardewApkTool.IsGameVersionSupport)
             {
                 ToastNotifyTool.Notify("Not support game version: " + StardewApkTool.CurrentGameVersion + ", please update game");
                 return;
             }
 
-            if (SMAPIInstaller.IsInstalled is false)
+            if (!SMAPIInstaller.IsInstalled)
             {
                 ToastNotifyTool.Notify("Please install SMAPI!!");
                 return;

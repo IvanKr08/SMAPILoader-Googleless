@@ -1,6 +1,5 @@
 ﻿using Mono.Cecil;
-using MonoMod.Utils;
-using System;
+
 using System.Linq;
 
 namespace SMAPIGameLoader.Game.Rewriter;

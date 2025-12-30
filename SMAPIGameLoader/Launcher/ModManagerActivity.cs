@@ -1,15 +1,15 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Widget;
+
 using AndroidX.AppCompat.App;
-using Newtonsoft.Json.Linq;
+
 using SMAPIGameLoader.Tool;
+
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using Xamarin.Essentials;
 
 namespace SMAPIGameLoader.Launcher;
@@ -45,7 +45,7 @@ internal class ModManagerActivity : AppCompatActivity
             OnClickModItemView(e);
         };
         var installModBtn = FindViewById<Button>(Resource.Id.InstallModBtn);
-        installModBtn.Click += async (sender, e) =>
+        installModBtn.Click += (sender, e) =>
         {
             ModInstaller.OnClickInstallMod(OnInstalledCallback: () =>
             {

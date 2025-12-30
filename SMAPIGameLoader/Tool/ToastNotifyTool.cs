@@ -1,11 +1,6 @@
 ﻿using Android.App;
 using Android.Widget;
-using SMAPIGameLoader.Tool;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using Xamarin.Essentials;
 
 namespace SMAPIGameLoader;
@@ -28,7 +23,7 @@ internal static class ToastNotifyTool
             return;
         }
 
-        if (LastToast is not null)
+        if (LastToast != null)
             LastToast?.Cancel();
 
         LastToast = Toast.MakeText(Application.Context, message, duration);

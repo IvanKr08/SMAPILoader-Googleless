@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.0.11123.170 d18.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36804.6 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMAPIGameLoader", "SMAPIGameLoader\SMAPIGameLoader.csproj", "{805B84D7-24B4-43F6-9086-A3773E1CD9BD}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryViewer", "MemoryViewer\MemoryViewer.csproj", "{C7452172-2FA7-4188-B34E-44FE0AABB72B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibPatcher", "LibPatcher\LibPatcher.csproj", "{3F5A7573-C08C-4110-AEE0-F2D50047D690}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyValley", "DummyValley\DummyValley.csproj", "{1F87D63C-0128-45FC-9B86-9E851A076F94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,18 @@ Global
 		{3F5A7573-C08C-4110-AEE0-F2D50047D690}.Release|ARM64.Build.0 = Release|Any CPU
 		{3F5A7573-C08C-4110-AEE0-F2D50047D690}.Release|x64.ActiveCfg = Release|Any CPU
 		{3F5A7573-C08C-4110-AEE0-F2D50047D690}.Release|x64.Build.0 = Release|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Debug|x64.Build.0 = Debug|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Release|ARM64.Build.0 = Release|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Release|x64.ActiveCfg = Release|Any CPU
+		{1F87D63C-0128-45FC-9B86-9E851A076F94}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

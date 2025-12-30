@@ -12,9 +12,7 @@ internal static class ErrorDialogTool
     // android.view.WindowLeaked: Activity crc644389b739a03c2b33.SMAPIActivity has leaked window DecorView@fd80140[Error Dialog] that was originally added here
     public static void Show(Exception exception, string title = "Exception Dialog")
     {
-
-        if (exception is null)
-            return;
+        if (exception == null) return;
 
         Console.WriteLine("try show error dialog: " + exception);
 

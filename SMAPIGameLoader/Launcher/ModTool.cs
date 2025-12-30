@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SMAPIGameLoader.Launcher;
 
@@ -17,8 +14,7 @@ internal static class ModTool
     {
         try
         {
-            if (Directory.Exists(rootDirPath) is false)
-                return;
+            if (!Directory.Exists(rootDirPath)) return;
 
             //search current only 1
             var manifestFilePath = Path.Combine(rootDirPath, ManifiestFileName);

@@ -3,17 +3,17 @@
 		<TargetFramework>net8.0-android</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<ApplicationId>com.companyname.SMAPIGameLoader</ApplicationId>
-		<SupportedOSPlatformVersion>23.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 		<AndroidSigningKeyStore>debug.keystore</AndroidSigningKeyStore>
 		<PackageIcon>icon.png</PackageIcon>
 		<Version></Version>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.1.4</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>1.1.5</ApplicationDisplayVersion>
 		<ApplicationVersion>$([System.DateTimeOffset]::Now.ToUnixTimeSeconds())</ApplicationVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-
 	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<AndroidPackageFormat>apk</AndroidPackageFormat>
 		<PublishTrimmed>False</PublishTrimmed>
@@ -26,6 +26,7 @@
 		<AndroidEnableProfiledAot>False</AndroidEnableProfiledAot>
 		<RunAOTCompilation>False</RunAOTCompilation>
 	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<AndroidEnableSGenConcurrent>True</AndroidEnableSGenConcurrent>
 		<AndroidKeyStore>True</AndroidKeyStore>
@@ -37,6 +38,7 @@
 		<RunAOTCompilation>False</RunAOTCompilation>
 		<EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
 	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="Mono.Cecil" Version="0.11.5">
 			<Aliases>MonoCecilAlias</Aliases>
@@ -47,11 +49,12 @@
 		<PackageReference Include="System.IO.Compression" Version="4.3.0" />
 		<PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.7.0.4" />
 		<PackageReference Include="Xamarin.Essentials" Version="1.7.7" />
-
 	</ItemGroup>
+	
 	<ItemGroup>
 		<ProjectReference Include="..\AssemblyStore\AssemblyStore.csproj" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<Reference Include="0Harmony">
 			<HintPath>..\SharedLibs\0Harmony.dll</HintPath>
@@ -74,24 +77,22 @@
 		<Reference Include="MonoMod.Utils">
 			<HintPath>..\SharedLibs\MonoMod.Utils.dll</HintPath>
 		</Reference>
+		
 		<Reference Include="MonoGame.Framework">
-			<HintPath>..\..\SMAPI-Android-1.6\src\DependenciesDll\MonoGame.Framework.dll</HintPath>
+			<HintPath>..\DummyValley\MonoGame.Framework.dll</HintPath>
 		</Reference>
-		<Reference Include="StardewValley">
-			<HintPath>..\..\SMAPI-Android-1.6\src\DependenciesDll\StardewValley.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="StardewValley.GameData">
-			<HintPath>..\..\SMAPI-Android-1.6\src\DependenciesDll\StardewValley.GameData.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
+		<ProjectReference Include="..\DummyValley\DummyValley.csproj" >
+			<Private>false</Private>
+		</ProjectReference>
 	</ItemGroup>
+	
 	<ItemGroup>
-		<None Update="Resources\Drawable\icon.png">
+		<None Update="resources\Drawable\icon.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
+	
 	<Target Name="RestoreDotnetTools" BeforeTargets="Restore">
 		<Message Text="Restoring dotnet tools" Importance="High" />
 		<Exec Command="dotnet tool restore" />

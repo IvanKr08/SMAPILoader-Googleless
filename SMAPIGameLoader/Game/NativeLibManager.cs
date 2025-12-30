@@ -1,11 +1,9 @@
-﻿using LWJGL;
-using MonoGame.Framework.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using LWJGL;
+
+using MonoGame.Framework.Utilities;
 
 namespace SMAPIGameLoader.Game;
 
@@ -16,7 +14,7 @@ internal static class NativeLibManager
         nint num = FuncLoader.LoadLibrary("liblwjgl_lz4.so");
         if (num == IntPtr.Zero)
         {
-            string folderPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             string directoryName = Path.GetDirectoryName(folderPath);
             string libname = Path.Combine(directoryName, "lib", "liblwjgl_lz4.so");
             num = FuncLoader.LoadLibrary(libname);

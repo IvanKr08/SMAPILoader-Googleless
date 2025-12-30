@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<AssemblyName>StardewValley</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="MonoGame.Framework">
+			<HintPath>MonoGame.Framework.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+</Project>
