@@ -6,7 +6,7 @@ using ELFSharp.ELF.Sections;
 namespace LibPatcher;
 
 abstract class LibPatcherBase<T> where T : struct, IUnsignedNumber<T> {
-	public const string DotNetVersion = "9.0.17";
+	public const string DotNetVersion = "9.0.20";
 	
     public Dictionary<string, SymbolEntry<T>> MonoMethodMap { get; } = new();
     public string LibFile { get; }
